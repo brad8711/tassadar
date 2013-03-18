@@ -1,6 +1,14 @@
 require 'zlib'
-require 'rbzip2'
 require 'stringio'
+require 'tassadar/bzip'
+
+begin
+  require 'bzip2'
+  BZIP = Tassadar::BZip.set_implementation('bzip2')
+rescue LoadError, Tassadar::BZip::DefaultToRbzip
+  require 'rbzip2'
+  BZIP = Tassadar::BZip.set_implementation('rbzip2')
+end
 
 module Tassadar
   module MPQ
@@ -47,7 +55,7 @@ module Tassadar
         when 2
           Zlib::Deflate.deflate(data[1,data.size - 1])
         when 16
-          RBzip2::Decompressor.new(StringIO.new(data[1,data.size - 1])).read
+          BZip.decompress(data[1,data.size - 1])
         else
           raise NotImplementedError
         end

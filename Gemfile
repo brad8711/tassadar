@@ -7,3 +7,5 @@ gem 'rspec'
 gem 'watchr'
 gem 'rr'
 gem 'rake'
+
+gem 'bzip2-ruby'
